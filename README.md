@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Python Starter Template 🐍
 
 This repository provides a clean, reusable scaffold for Python projects using [Ruff](https://docs.astral.sh/ruff/) for linting and [Visual Studio Code](https://code.visualstudio.com/) for development.
@@ -32,7 +31,6 @@ To start a new project using this template:
    ```bash
    ruff check src/ --fix
    ```
-=======
 # Python Starter Template 🐍
 
 This repository provides a clean, reusable scaffold for Python projects using [Ruff](https://docs.astral.sh/ruff/) for linting and [Visual Studio Code](https://code.visualstudio.com/) for development.
@@ -66,4 +64,3 @@ To start a new project using this template:
    ```bash
    ruff check src/ --fix
    ```
->>>>>>> 6e2a5ce29907c06e628944b76107f3256a0c5a71
