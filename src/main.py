@@ -14,9 +14,13 @@ Usage:
 """
 def main():
     import pygame
+
+    #CONSTANTS
+    CANVAS_WIDTH = 1000
+    CANVAS_HEIGHT = 1000
     
     pygame.init()
-    screen = pygame.display.set_mode((800, 600))
+    screen = pygame.display.set_mode((CANVAS_WIDTH, CANVAS_HEIGHT))
     pygame.display.set_caption("Politaball")
     running = True
     while running:

@@ -1,7 +1,9 @@
 [tool.ruff]
 select = ["E", "F", "I"]
-line-length = 88
+line-length = 90
 unsafe-fixes = false
+fix = false
+
 
 [tool.ruff.lint.isort]
 known-first-party = ["src"]
