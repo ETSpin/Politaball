@@ -2,23 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 """
-File: {file_name}
+File: main.py
 Author: MORS
-Date: {date}
+Date: 21 Sep 25
 
 Description:
-{brief_description_of_the_file}
+Politaball -- minor variations can move things
 
 Usage:
-{brief_usage_instructions}
 
 """
 
 
 def main():
-    """
-    TBD: Method DocString
-    """
     pass
 
 
