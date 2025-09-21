@@ -17,12 +17,16 @@ import pygame
 
 
 class Ball:
+
+    ballcount = 0
+
     def __init__(self, position, velocity, radius, social, color):
         self.position = pygame.math.Vector2(position)      # PyGame Vector2 object
         self.velocity = pygame.math.Vector2(velocity)      # PyGame Vector2 object
         self.radius = radius
         self.social = social          # social score
         self.color = color
+        Ball.ballcount += 1
 
     def update(self):
         # Move the ball
@@ -48,4 +52,9 @@ class Ball:
         r = int(255 * ratio)
         b = int(255 * (1 - ratio))
         return (r, 0, b)
+    
+    @classmethod
+    def get_ball_count(cls):
+        return f"Total # of balls: {cls.ballcount}"
+
 

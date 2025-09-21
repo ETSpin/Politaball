@@ -39,7 +39,7 @@ def main():
         velocity = (0,0)
         color = ball.Ball.ideology_color(position[0], CANVAS_WIDTH)
         balls.append(ball.Ball(position,velocity,RADIUS,position[0],color))
-    #print (balls)
+    print(ball.Ball.get_ball_count())
     
     pygame.init()
     screen = pygame.display.set_mode((CANVAS_WIDTH, CANVAS_HEIGHT))
