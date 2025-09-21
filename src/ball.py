@@ -18,8 +18,8 @@ import pygame
 
 class Ball:
     def __init__(self, position, velocity, radius, social, color):
-        self.position = position      # [x, y]
-        self.velocity = velocity      # [vx, vy]
+        self.position = pygame.math.Vector2(position)      # PyGame Vector2 object
+        self.velocity = pygame.math.Vector2(velocity)      # PyGame Vector2 object
         self.radius = radius
         self.social = social          # social score
         self.color = color
@@ -41,3 +41,11 @@ class Ball:
     def direction(self):
         # Return angle in degrees or radians
         return math.atan2(self.velocity[1], self.velocity[0])
+    
+    def ideology_color(x, canvas_width):
+        # Alter a ball's color based on where it is from left(blue) to right (red)
+        ratio = x / canvas_width
+        r = int(255 * ratio)
+        b = int(255 * (1 - ratio))
+        return (r, 0, b)
+

@@ -13,11 +13,33 @@ Usage:
 
 """
 def main():
+    import math  # noqa: F401
+    import random  # noqa: F401
+
     import pygame
 
+    import ball  # noqa: F401
+
     #CONSTANTS
-    CANVAS_WIDTH = 1000
-    CANVAS_HEIGHT = 1000
+    CANVAS_WIDTH = 1200
+    CANVAS_HEIGHT = 1200
+    BALL_COUNT = 1000
+    # GREY = (128, 128, 128)
+    # MAGENTA = (255, 0, 255)
+    # BLUE = (0, 0 , 255)
+    # RED = (255, 0, 0)
+    RADIUS = 5
+
+
+    #Create a list of Balls --
+    balls = []
+
+    for values in range(BALL_COUNT):
+        position = (random.gauss(CANVAS_WIDTH/2, 100), random.gauss(CANVAS_HEIGHT/2, 100))  # noqa: E501
+        velocity = (0,0)
+        color = ball.Ball.ideology_color(position[0], CANVAS_WIDTH)
+        balls.append(ball.Ball(position,velocity,RADIUS,position[0],color))
+    #print (balls)
     
     pygame.init()
     screen = pygame.display.set_mode((CANVAS_WIDTH, CANVAS_HEIGHT))
@@ -27,11 +49,15 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        screen.fill((30, 30, 30))
+        screen.fill((0, 0, 0))
+      
+        pygame.draw.line(screen, (255, 255, 255), (CANVAS_WIDTH // 2, 0), (CANVAS_WIDTH // 2, CANVAS_HEIGHT), 1)  # noqa: E501
+
+        for b in balls:
+            b.draw(screen)
+
         pygame.display.flip()
     pygame.quit()
-
-
 
 if __name__ == '__main__':
     main()
