@@ -42,16 +42,21 @@ def main():
     print(ball.Ball.get_ball_count())
     
     pygame.init()
+    icon = pygame.image.load("assets/icons/politaball_icon.png") # Load the original image
+    icon = pygame.transform.smoothscale(icon, (32, 32)) # Resize it to 32x32 pixels
+    pygame.display.set_icon(icon) # Set the icon for the game
     screen = pygame.display.set_mode((CANVAS_WIDTH, CANVAS_HEIGHT))
     pygame.display.set_caption("Politaball")
+    
+    #Start the Game Loop
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        screen.fill((0, 0, 0))
+        screen.fill((255, 255, 255))
       
-        pygame.draw.line(screen, (255, 255, 255), (CANVAS_WIDTH // 2, 0), (CANVAS_WIDTH // 2, CANVAS_HEIGHT), 1)  # noqa: E501
+        pygame.draw.line(screen, (0, 0, 0), (CANVAS_WIDTH // 2, 0), (CANVAS_WIDTH // 2, CANVAS_HEIGHT), 1)  # noqa: E501
 
         for b in balls:
             b.draw(screen)

@@ -14,11 +14,14 @@ import math  # noqa: F401
 import random  # noqa: F401
 
 import pygame
+import pygame.gfxdraw
 
 
 class Ball:
 
     ballcount = 0
+    red_avg = 0
+    blue_avg = 0
 
     def __init__(self, position, velocity, radius, social, color):
         self.position = pygame.math.Vector2(position)      # PyGame Vector2 object
@@ -35,8 +38,12 @@ class Ball:
         # Add boundary logic here if needed
 
     def draw(self, surface):
-        # Draw the ball on the given surface
-        pygame.draw.circle(surface, self.color, self.position, self.radius)
+        # Draw the ball on the specified surface -in this case we pass the variable screen
+        #pygame.draw.circle(surface, self.color,  self.position, self.radius) #basic circle # noqa: E501
+        #pygame.draw.circle(surface, (0,0,0),  self.position, self.radius, 1) #basic circle outline # noqa: E501
+        pygame.gfxdraw.filled_circle(surface, int(self.position.x), int(self.position.y), self.radius, self.color)  # noqa: E501
+        pygame.gfxdraw.aacircle(surface, int(self.position.x), int(self.position.y), self.radius, (0,0,0))  # noqa: E501
+
 
     def speed(self):
         # Return scalar speed
@@ -56,5 +63,11 @@ class Ball:
     @classmethod
     def get_ball_count(cls):
         return f"Total # of balls: {cls.ballcount}"
+    
+    @classmethod
+    def get_avg_color(cls):
+        red = cls.red_avg / cls.ballcount
+        blue = cls.blue_avg / cls.ballcount
+        return f"The average color is: ({red}, 0, {blue})"
 
 
