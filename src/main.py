@@ -22,6 +22,7 @@ def main():
 
     #CONSTANTS
     CANVAS_WIDTH = 1200
+    INFO_PANEL_WIDTH = 300
     CANVAS_HEIGHT = 1200
     BALL_COUNT = 1000
     # GREY = (128, 128, 128)
@@ -45,7 +46,11 @@ def main():
     icon = pygame.image.load("assets/icons/politaball_icon.png") # Load the original image
     icon = pygame.transform.smoothscale(icon, (32, 32)) # Resize it to 32x32 pixels
     pygame.display.set_icon(icon) # Set the icon for the game
-    screen = pygame.display.set_mode((CANVAS_WIDTH, CANVAS_HEIGHT))
+    screen = pygame.display.set_mode((CANVAS_WIDTH+INFO_PANEL_WIDTH, CANVAS_HEIGHT))
+    
+    game_surface = pygame.Surface((CANVAS_WIDTH, CANVAS_HEIGHT))
+    info_surface = pygame.Surface((INFO_PANEL_WIDTH, CANVAS_HEIGHT))
+
     pygame.display.set_caption("Politaball")
     
     #Start the Game Loop
@@ -54,12 +59,19 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        screen.fill((255, 255, 255))
-      
-        pygame.draw.line(screen, (0, 0, 0), (CANVAS_WIDTH // 2, 0), (CANVAS_WIDTH // 2, CANVAS_HEIGHT), 1)  # noqa: E501
+        
+        game_surface.fill((255, 255, 255))
+        info_surface.fill((30,30,30))
+        pygame.draw.line(game_surface, (0, 0, 0), (CANVAS_WIDTH // 2, 0), (CANVAS_WIDTH // 2, CANVAS_HEIGHT), 1)  # noqa: E501
 
         for b in balls:
-            b.draw(screen)
+            b.draw(game_surface)
+
+        # Draw game in left region
+        screen.blit(game_surface, (0, 0))
+        # Draw info panel in right region
+        screen.blit(info_surface, (CANVAS_WIDTH, 0))
+
 
         pygame.display.flip()
     pygame.quit()
