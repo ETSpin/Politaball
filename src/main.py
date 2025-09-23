@@ -47,6 +47,7 @@ def main():
     icon = pygame.transform.smoothscale(icon, (32, 32)) # Resize it to 32x32 pixels
     pygame.display.set_icon(icon) # Set the icon for the game
     screen = pygame.display.set_mode((CANVAS_WIDTH+INFO_PANEL_WIDTH, CANVAS_HEIGHT))
+    font = pygame.font.SysFont(None, 24)
     
     game_surface = pygame.Surface((CANVAS_WIDTH, CANVAS_HEIGHT))
     info_surface = pygame.Surface((INFO_PANEL_WIDTH, CANVAS_HEIGHT))
@@ -66,6 +67,10 @@ def main():
 
         for b in balls:
             b.draw(game_surface)
+
+        text = font.render("Avg Color: (R, G, B)", True, (255, 255, 255))
+        info_surface.blit(text, (10, 10))
+
 
         # Draw game in left region
         screen.blit(game_surface, (0, 0))
