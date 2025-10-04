@@ -19,6 +19,7 @@ def main():
     import pygame
 
     import ball  # noqa: F401
+    from ballanalyzer import BallAnalyzer
 
     #CONSTANTS
     CANVAS_WIDTH = 1200
@@ -31,10 +32,10 @@ def main():
     # RED = (255, 0, 0)
     RADIUS = 5
 
+    #ballanalysis = BallAnalyzer()
 
     #Create a list of Balls --
     balls = []
-
     for values in range(BALL_COUNT):
         position = (random.gauss(CANVAS_WIDTH/2, 100), random.gauss(CANVAS_HEIGHT/2, 100))  # noqa: E501
         
@@ -80,18 +81,19 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
         
-        dt = clock.tick(60)
+        dt = clock.tick(60)  # noqa: F841
 
         game_surface.fill((255, 255, 255))
         info_surface.fill((30,30,30))
         pygame.draw.line(game_surface, (0, 0, 0), (CANVAS_WIDTH // 2, 0), (CANVAS_WIDTH // 2, CANVAS_HEIGHT), 1)  # noqa: E501
 
         for b in balls:
-            b.update()
+            b.update(CANVAS_WIDTH,CANVAS_HEIGHT)
             b.ideology_color(CANVAS_WIDTH)
             b.draw(game_surface)
 
-        text = font.render("Avg Color: (R, G, B)", True, (255, 255, 255))
+        avgballcolor = BallAnalyzer.average_ball_color(balls)
+        text = font.render(f"Avg Color: (R, G, B) = {avgballcolor}", True, (avgballcolor[0], avgballcolor[1], avgballcolor[2]))
         info_surface.blit(text, (10, 10))
 
         # Draw game in left region

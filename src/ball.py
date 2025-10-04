@@ -31,11 +31,25 @@ class Ball:
         self.ideology_color(canvas_width)
         Ball.ballcount += 1
 
-    def update(self):
+    def update(self, screen_width, screen_height):
         # Move the ball
-        self.position[0] += self.velocity[0]
-        self.position[1] += self.velocity[1]
-        # Add boundary logic here if needed
+        if self.velocity[0] != 0:
+            self.position[0] += self.velocity[0]
+            if self.position[0] <= self.radius:
+                self.position[0] = self.radius
+                self.velocity[0] = 0
+            elif self.position[0] >= (screen_width - self.radius):
+                self.position[0] = (screen_width - self.radius)
+                self.velocity[0] = 0
+
+        if self.velocity[1] !=0:
+            self.position[1] += self.velocity[1]
+            if self.position[1] <= self.radius:
+                self.position[1] = self.radius
+                self.velocity[1] = 0
+            elif self.position[1] >= (screen_height - self.radius):
+                self.position[1] = (screen_height - self.radius)
+                self.velocity[1] = 0
 
     def draw(self, surface):
         # Draw the ball on the specified surface -in this case we pass the variable screen
