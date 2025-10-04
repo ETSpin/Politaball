@@ -10,6 +10,8 @@ python-starter-template/
 ├── .gitignore            # Files to exclude from Git tracking
 ├── src/                  # Source code lives here
 │   └── main.py
+│   └── ball.py           # ball class information
+│   └── ballanalyzer.py   # ball analyzer class that holds ball analyzer functions
 |── README.md             # Project overview
 └── requirements.txt      # Requirements for the program to run correctly
 
