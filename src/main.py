@@ -37,22 +37,41 @@ def main():
 
     for values in range(BALL_COUNT):
         position = (random.gauss(CANVAS_WIDTH/2, 100), random.gauss(CANVAS_HEIGHT/2, 100))  # noqa: E501
-        velocity = (0,0)
-        color = ball.Ball.ideology_color(position[0], CANVAS_WIDTH)
-        balls.append(ball.Ball(position,velocity,RADIUS,position[0],color))
+        
+        if position[0] < CANVAS_WIDTH // 2:
+            velocity = (-1,0)
+        elif position[0] > CANVAS_WIDTH // 2:
+            velocity = (1,0)
+        else:
+            velocity = (0,0)
+
+        balls.append(ball.Ball(position,velocity,RADIUS,position[0],CANVAS_WIDTH))
     print(ball.Ball.get_ball_count())
     
+    #initialize pygame
     pygame.init()
     icon = pygame.image.load("assets/icons/politaball_icon.png") # Load the original image
     icon = pygame.transform.smoothscale(icon, (32, 32)) # Resize it to 32x32 pixels
     pygame.display.set_icon(icon) # Set the icon for the game
     screen = pygame.display.set_mode((CANVAS_WIDTH+INFO_PANEL_WIDTH, CANVAS_HEIGHT))
     font = pygame.font.SysFont(None, 24)
-    
     game_surface = pygame.Surface((CANVAS_WIDTH, CANVAS_HEIGHT))
     info_surface = pygame.Surface((INFO_PANEL_WIDTH, CANVAS_HEIGHT))
-
     pygame.display.set_caption("Politaball")
+    clock = pygame.time.Clock()
+
+
+    #load the initial state of the balls onto the screen
+    for b in balls:
+        b.draw(game_surface)
+
+    text = font.render("Avg Color: (R, G, B)", True, (255, 255, 255))
+    info_surface.blit(text, (10, 10))
+    # Draw game in left region
+    screen.blit(game_surface, (0, 0))
+    # Draw info panel in right region
+    screen.blit(info_surface, (CANVAS_WIDTH, 0))
+
     
     #Start the Game Loop
     running = True
@@ -61,22 +80,24 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
         
+        dt = clock.tick(60)
+
         game_surface.fill((255, 255, 255))
         info_surface.fill((30,30,30))
         pygame.draw.line(game_surface, (0, 0, 0), (CANVAS_WIDTH // 2, 0), (CANVAS_WIDTH // 2, CANVAS_HEIGHT), 1)  # noqa: E501
 
         for b in balls:
+            b.update()
+            b.ideology_color(CANVAS_WIDTH)
             b.draw(game_surface)
 
         text = font.render("Avg Color: (R, G, B)", True, (255, 255, 255))
         info_surface.blit(text, (10, 10))
 
-
         # Draw game in left region
         screen.blit(game_surface, (0, 0))
         # Draw info panel in right region
         screen.blit(info_surface, (CANVAS_WIDTH, 0))
-
 
         pygame.display.flip()
     pygame.quit()

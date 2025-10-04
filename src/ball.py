@@ -23,12 +23,12 @@ class Ball:
     red_avg = 0
     blue_avg = 0
 
-    def __init__(self, position, velocity, radius, social, color):
+    def __init__(self, position, velocity, radius, social,canvas_width):
         self.position = pygame.math.Vector2(position)      # PyGame Vector2 object
         self.velocity = pygame.math.Vector2(velocity)      # PyGame Vector2 object
         self.radius = radius
         self.social = social          # social score
-        self.color = color
+        self.ideology_color(canvas_width)
         Ball.ballcount += 1
 
     def update(self):
@@ -53,12 +53,13 @@ class Ball:
         # Return angle in degrees or radians
         return math.atan2(self.velocity[1], self.velocity[0])
     
-    def ideology_color(x, canvas_width):
+    def ideology_color(self, canvas_width):
         # Alter a ball's color based on where it is from left(blue) to right (red)
-        ratio = x / canvas_width
+        #ratio = self.position.x / canvas_width
+        ratio = max(0, min(1,self.position.x / canvas_width))
         r = int(255 * ratio)
         b = int(255 * (1 - ratio))
-        return (r, 0, b)
+        self.color =  (r, 0, b)
     
     @classmethod
     def get_ball_count(cls):
