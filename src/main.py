@@ -13,6 +13,7 @@ Usage:
 
 """
 def main():
+    import copy
     import math  # noqa: F401
     import random  # noqa: F401
 
@@ -36,6 +37,7 @@ def main():
 
     #Create a list of Balls --
     balls = []
+    starting_balls = []
     for values in range(BALL_COUNT):
         position = (random.gauss(CANVAS_WIDTH/2, 100), random.gauss(CANVAS_HEIGHT/2, 100))  # noqa: E501
         
@@ -47,6 +49,8 @@ def main():
             velocity = (0,0)
 
         balls.append(ball.Ball(position,velocity,RADIUS,position[0],CANVAS_WIDTH))
+    
+    starting_balls = copy.deepcopy(balls) #captures the starting state of the balls
     print(ball.Ball.get_ball_count())
     
     #initialize pygame
@@ -65,9 +69,7 @@ def main():
     info_circle_center = (INFO_PANEL_WIDTH // 2, info_circle_radius + 10)
     pygame.draw.circle(info_surface, (255, 0, 0), info_circle_center, info_circle_radius)
 
-
-
-
+    # Set the clock start time -- used for FPS calculations in game loop
     clock = pygame.time.Clock()
 
 
@@ -90,6 +92,7 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
         
+        # Sets FPS to 60
         dt = clock.tick(60)  # noqa: F841
 
         game_surface.fill((255, 255, 255))
