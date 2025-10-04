@@ -76,4 +76,5 @@ class BallAnalyzer:
             b += ballitem.color[2]
 
         color = (int(r/num_balls), int(g/num_balls), int(b/num_balls))
+        #print(color)
         return color

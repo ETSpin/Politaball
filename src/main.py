@@ -59,6 +59,15 @@ def main():
     game_surface = pygame.Surface((CANVAS_WIDTH, CANVAS_HEIGHT))
     info_surface = pygame.Surface((INFO_PANEL_WIDTH, CANVAS_HEIGHT))
     pygame.display.set_caption("Politaball")
+
+    # Info Panel Circle
+    info_circle_radius = int(INFO_PANEL_WIDTH * 0.45)  # 90% diameter
+    info_circle_center = (INFO_PANEL_WIDTH // 2, info_circle_radius + 10)
+    pygame.draw.circle(info_surface, (255, 0, 0), info_circle_center, info_circle_radius)
+
+
+
+
     clock = pygame.time.Clock()
 
 
@@ -93,8 +102,22 @@ def main():
             b.draw(game_surface)
 
         avgballcolor = BallAnalyzer.average_ball_color(balls)
-        text = font.render(f"Avg Color: (R, G, B) = {avgballcolor}", True, (avgballcolor[0], avgballcolor[1], avgballcolor[2]))
-        info_surface.blit(text, (10, 10))
+        pygame.draw.circle(info_surface, avgballcolor, info_circle_center, info_circle_radius)  # noqa: E501
+
+        label_text = font.render("Avg Color: ", True, (255,255,255))
+        color_text = font.render(f"{avgballcolor}", True, avgballcolor)
+
+        label_rect = label_text.get_rect()
+        color_rect = color_text.get_rect()
+
+        total_width = label_rect.width + color_rect.width
+        start_x = (INFO_PANEL_WIDTH - total_width) // 2
+        y_pos = 2 * info_circle_radius + 15
+
+        info_surface.blit(label_text, (start_x, y_pos))
+        info_surface.blit(color_text, (start_x + label_rect.width, y_pos))
+
+
 
         # Draw game in left region
         screen.blit(game_surface, (0, 0))
