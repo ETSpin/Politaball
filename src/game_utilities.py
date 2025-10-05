@@ -30,24 +30,11 @@ class Game_Utilities:
     # a method to find the relative mouse position for several pygame surfaces
     @staticmethod
     def get_mouse_loc_info(mouse_pos, **surface_origins):
-        results = {}
-
-        # game_origin = (0,0)
-        # game_rect_screen = pygame.Rect(game_origin, game_surface.get_size())
-
-        # control_origin = (0, CANVAS_HEIGHT)
-        # control_rect_screen = pygame.Rect(control_origin, control_surface.get_size())
-
-        # info_origin = (CANVAS_WIDTH,0)
-        # info_rect_screen = pygame.Rect(info_origin, info_surface.get_size())
-
         for name, (surface, origin) in surface_origins.items():
             surface_rect = pygame.Rect(origin, surface.get_size())
             if surface_rect.collidepoint(mouse_pos):
                 relativemousepos = (mouse_pos[0] - origin[0], mouse_pos[1] - origin[1])
-                print(f"surface locations: {surface_rect}")
-                print(f"relative mouse position: {relativemousepos}")
-
-        
-        
-        return results
+                #print(f"surface locations: {surface_rect}")
+                #print(f"relative mouse position: {relativemousepos}")   
+                return(surface, relativemousepos)
+        return (None, None)

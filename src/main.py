@@ -37,8 +37,6 @@ def main():
     RADIUS = 5
     FPS = 60
 
-    #ballanalysis = BallAnalyzer()
-
     #Create a list of Balls --
     balls = []
     starting_balls = []
@@ -89,56 +87,56 @@ def main():
     # Draw info panel in right region
     screen.blit(info_surface, (CANVAS_WIDTH, 0))
 
-    
     #Start the Game Loop
     running = True
     paused = False
+    step_once = False
     while running:
         # Sets FPS to 60
         dt = clock.tick(FPS)  # noqa: F841
+        if not paused:
+            game_surface.fill((255, 255, 255))
+            info_surface.fill((30,30,30))
+            control_surface.fill((0,0,0))
+            pygame.draw.line(game_surface, (0, 0, 0), (CANVAS_WIDTH // 2, 0), (CANVAS_WIDTH // 2, CANVAS_HEIGHT), 1)  # noqa: E501
 
-        game_surface.fill((255, 255, 255))
-        info_surface.fill((30,30,30))
-        control_surface.fill((0,0,0))
-        pygame.draw.line(game_surface, (0, 0, 0), (CANVAS_WIDTH // 2, 0), (CANVAS_WIDTH // 2, CANVAS_HEIGHT), 1)  # noqa: E501
+            for b in balls:
+                b.update(CANVAS_WIDTH,CANVAS_HEIGHT)
+                b.ideology_color(CANVAS_WIDTH)
+                b.draw(game_surface)
 
-        for b in balls:
-            b.update(CANVAS_WIDTH,CANVAS_HEIGHT)
-            b.ideology_color(CANVAS_WIDTH)
-            b.draw(game_surface)
+            avgballcolor = BallAnalyzer.average_ball_color(balls)
+            pygame.draw.circle(info_surface, avgballcolor, info_circle_center, info_circle_radius)  # noqa: E501
 
-        avgballcolor = BallAnalyzer.average_ball_color(balls)
-        pygame.draw.circle(info_surface, avgballcolor, info_circle_center, info_circle_radius)  # noqa: E501
+            label_text = font.render("Avg Color: ", True, (255,255,255))
+            color_text = font.render(f"{avgballcolor}", True, avgballcolor)
 
-        label_text = font.render("Avg Color: ", True, (255,255,255))
-        color_text = font.render(f"{avgballcolor}", True, avgballcolor)
+            label_rect = label_text.get_rect()
+            color_rect = color_text.get_rect()
 
-        label_rect = label_text.get_rect()
-        color_rect = color_text.get_rect()
+            total_width = label_rect.width + color_rect.width
+            start_x = (INFO_PANEL_WIDTH - total_width) // 2
+            y_pos = 2 * info_circle_radius + 15
 
-        total_width = label_rect.width + color_rect.width
-        start_x = (INFO_PANEL_WIDTH - total_width) // 2
-        y_pos = 2 * info_circle_radius + 15
+            info_surface.blit(label_text, (start_x, y_pos))
+            info_surface.blit(color_text, (start_x + label_rect.width, y_pos))
 
-        info_surface.blit(label_text, (start_x, y_pos))
-        info_surface.blit(color_text, (start_x + label_rect.width, y_pos))
+            control_rect = control_surface.get_rect()
+            button_width, button_height = 100,50
+            padding = 5
+            center_button_x = control_rect.centerx - button_width // 2
+            center_button_y = control_rect.centery - button_height // 2
 
-        control_rect = control_surface.get_rect()
-        button_width, button_height = 100,50
-        padding = 5
-        center_button_x = control_rect.centerx - button_width // 2
-        center_button_y = control_rect.centery - button_height // 2
+            step_button = game_utils.draw_menu_button(control_surface,"Step",center_button_x ,center_button_y,button_width,button_height,font,(0,0,0))  # noqa: E501
+            pause_button = game_utils.draw_menu_button(control_surface,"Pause",step_button.left - (button_width + padding),center_button_y,button_width,button_height,font,(0,0,0))  # noqa: E501
+            play_button = game_utils.draw_menu_button(control_surface,"Play",step_button.right + padding,center_button_y,button_width,button_height,font,(0,0,0))  # noqa: E501
 
-        step_button = game_utils.draw_menu_button(control_surface,"Step",center_button_x ,center_button_y,button_width,button_height,font,(0,0,0))  # noqa: E501
-        pause_button = game_utils.draw_menu_button(control_surface,"Pause",step_button.left - (button_width + padding),center_button_y,button_width,button_height,font,(0,0,0))  # noqa: E501
-        play_button = game_utils.draw_menu_button(control_surface,"Play",step_button.right + padding,center_button_y,button_width,button_height,font,(0,0,0))  # noqa: E501
-
-        # Draw game in left region
-        screen.blit(game_surface, (0, 0))
-        # Draw info panel in right region
-        screen.blit(info_surface, (CANVAS_WIDTH, 0))
-        # Draw the control panel
-        screen.blit(control_surface, (0, CANVAS_HEIGHT))
+            # Draw game in left region
+            screen.blit(game_surface, (0, 0))
+            # Draw info panel in right region
+            screen.blit(info_surface, (CANVAS_WIDTH, 0))
+            # Draw the control panel
+            screen.blit(control_surface, (0, CANVAS_HEIGHT))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -146,16 +144,22 @@ def main():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 print(f"Mouse clicked at: {pygame.mouse.get_pos()}")
                 mouse_pos = event.pos
-
                 click_location_check = game_utils.get_mouse_loc_info(mouse_pos, game=(game_surface,(0,0)), control=(control_surface,(0, CANVAS_HEIGHT)), info=(info_surface,(CANVAS_WIDTH,0)))  # noqa: E501
-                #print(click_location_check)
+                if click_location_check[0] == game_surface:
+                    print(f"game board click: {click_location_check[1]}")
+                elif click_location_check[0] == info_surface:
+                    print(f"info surface click: {click_location_check[1]}")
+                elif click_location_check[0] == control_surface:
+                    print(f"control surface click: {click_location_check[1]}")
+                    if step_button.collidepoint(click_location_check[1]):
+                        print("Step button clicked")
+                    elif pause_button.collidepoint(click_location_check[1]):
+                        print("Pause button clicked")
+                        paused = True
+                    elif play_button.collidepoint(click_location_check[1]):
+                        print("Play button clicked")
+                        paused = False
 
-                # if control_rect_screen.collidepoint(mouse_pos):
-                #     print("Control Screen clicked")
-                # elif game_rect_screen.collidepoint(mouse_pos):
-                #     print("Game Screen clicked")
-                # elif info_rect_screen.collidepoint(mouse_pos):
-                #     print("Info Screen clicked")
 
         pygame.display.flip()
     pygame.quit()
