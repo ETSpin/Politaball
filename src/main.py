@@ -21,17 +21,21 @@ def main():
 
     import ball  # noqa: F401
     from ballanalyzer import BallAnalyzer
+    from game_utilities import Game_Utilities as game_utils
+
 
     #CONSTANTS
     CANVAS_WIDTH = 1200
     INFO_PANEL_WIDTH = 300
     CANVAS_HEIGHT = 1200
+    CONTROL_PANEL_HEIGHT = 100
     BALL_COUNT = 1000
     # GREY = (128, 128, 128)
     # MAGENTA = (255, 0, 255)
     # BLUE = (0, 0 , 255)
     # RED = (255, 0, 0)
     RADIUS = 5
+    FPS = 60
 
     #ballanalysis = BallAnalyzer()
 
@@ -53,15 +57,16 @@ def main():
     starting_balls = copy.deepcopy(balls) #captures the starting state of the balls
     print(ball.Ball.get_ball_count())
     
-    #initialize pygame
+    #initialize pygame and setup the screen layout
     pygame.init()
     icon = pygame.image.load("assets/icons/politaball_icon.png") # Load the original image
     icon = pygame.transform.smoothscale(icon, (32, 32)) # Resize it to 32x32 pixels
     pygame.display.set_icon(icon) # Set the icon for the game
-    screen = pygame.display.set_mode((CANVAS_WIDTH+INFO_PANEL_WIDTH, CANVAS_HEIGHT))
+    screen = pygame.display.set_mode((CANVAS_WIDTH+INFO_PANEL_WIDTH, CANVAS_HEIGHT+CONTROL_PANEL_HEIGHT))  # noqa: E501
     font = pygame.font.SysFont(None, 24)
     game_surface = pygame.Surface((CANVAS_WIDTH, CANVAS_HEIGHT))
-    info_surface = pygame.Surface((INFO_PANEL_WIDTH, CANVAS_HEIGHT))
+    info_surface = pygame.Surface((INFO_PANEL_WIDTH, CANVAS_HEIGHT+CONTROL_PANEL_HEIGHT))
+    control_surface = pygame.Surface((CANVAS_WIDTH, CONTROL_PANEL_HEIGHT))
     pygame.display.set_caption("Politaball")
 
     # Info Panel Circle
@@ -87,16 +92,14 @@ def main():
     
     #Start the Game Loop
     running = True
+    paused = False
     while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-        
         # Sets FPS to 60
-        dt = clock.tick(60)  # noqa: F841
+        dt = clock.tick(FPS)  # noqa: F841
 
         game_surface.fill((255, 255, 255))
         info_surface.fill((30,30,30))
+        control_surface.fill((0,0,0))
         pygame.draw.line(game_surface, (0, 0, 0), (CANVAS_WIDTH // 2, 0), (CANVAS_WIDTH // 2, CANVAS_HEIGHT), 1)  # noqa: E501
 
         for b in balls:
@@ -120,12 +123,39 @@ def main():
         info_surface.blit(label_text, (start_x, y_pos))
         info_surface.blit(color_text, (start_x + label_rect.width, y_pos))
 
+        control_rect = control_surface.get_rect()
+        button_width, button_height = 100,50
+        padding = 5
+        center_button_x = control_rect.centerx - button_width // 2
+        center_button_y = control_rect.centery - button_height // 2
 
+        step_button = game_utils.draw_menu_button(control_surface,"Step",center_button_x ,center_button_y,button_width,button_height,font,(0,0,0))  # noqa: E501
+        pause_button = game_utils.draw_menu_button(control_surface,"Pause",step_button.left - (button_width + padding),center_button_y,button_width,button_height,font,(0,0,0))  # noqa: E501
+        play_button = game_utils.draw_menu_button(control_surface,"Play",step_button.right + padding,center_button_y,button_width,button_height,font,(0,0,0))  # noqa: E501
 
         # Draw game in left region
         screen.blit(game_surface, (0, 0))
         # Draw info panel in right region
         screen.blit(info_surface, (CANVAS_WIDTH, 0))
+        # Draw the control panel
+        screen.blit(control_surface, (0, CANVAS_HEIGHT))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                print(f"Mouse clicked at: {pygame.mouse.get_pos()}")
+                mouse_pos = event.pos
+
+                click_location_check = game_utils.get_mouse_loc_info(mouse_pos, game=(game_surface,(0,0)), control=(control_surface,(0, CANVAS_HEIGHT)), info=(info_surface,(CANVAS_WIDTH,0)))  # noqa: E501
+                #print(click_location_check)
+
+                # if control_rect_screen.collidepoint(mouse_pos):
+                #     print("Control Screen clicked")
+                # elif game_rect_screen.collidepoint(mouse_pos):
+                #     print("Game Screen clicked")
+                # elif info_rect_screen.collidepoint(mouse_pos):
+                #     print("Info Screen clicked")
 
         pygame.display.flip()
     pygame.quit()
