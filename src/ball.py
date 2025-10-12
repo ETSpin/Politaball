@@ -52,7 +52,7 @@ class Ball:
                 self.velocity[1] = 0
 
     def draw(self, surface):
-        # Draw the ball on the specified surface -in this case we pass the variable screen
+        # Draw the ball on the specified surface
         #pygame.draw.circle(surface, self.color,  self.position, self.radius) #basic circle # noqa: E501
         #pygame.draw.circle(surface, (0,0,0),  self.position, self.radius, 1) #basic circle outline # noqa: E501
         pygame.gfxdraw.filled_circle(surface, int(self.position.x), int(self.position.y), self.radius, self.color)  # noqa: E501
@@ -69,7 +69,6 @@ class Ball:
     
     def ideology_color(self, canvas_width):
         # Alter a ball's color based on where it is from left(blue) to right (red)
-        #ratio = self.position.x / canvas_width
         ratio = max(0, min(1,self.position.x / canvas_width))
         r = int(255 * ratio)
         b = int(255 * (1 - ratio))
@@ -78,11 +77,4 @@ class Ball:
     @classmethod
     def get_ball_count(cls):
         return f"Total # of balls: {cls.ballcount}"
-    
-    @classmethod
-    def get_avg_color(cls):
-        red = cls.red_avg / cls.ballcount
-        blue = cls.blue_avg / cls.ballcount
-        return f"The average color is: ({red}, 0, {blue})"
-
 
