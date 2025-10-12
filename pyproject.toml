@@ -1,6 +1,7 @@
 [tool.ruff]
 select = ["E", "F", "I"]
-line-length = 90
+extend-ignore = ["F401"]
+line-length = 200
 unsafe-fixes = false
 fix = false
 

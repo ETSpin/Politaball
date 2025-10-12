@@ -17,15 +17,6 @@ import pygame
 class Game_Utilities:
     
     # draws and returns a simple grey button with black text
-    @staticmethod
-    def draw_menu_button(surface, text, x, y, width, height, font, textcolor=(255,255,255), buttoncolor=(211,211,211)):  # noqa: E501
-        button = pygame.Rect(x,y,width,height) 
-        pygame.draw.rect(surface, buttoncolor, button, 0,5)
-        button_text = font.render(text, True, textcolor)
-        button_rect = button_text.get_rect()
-        button_rect.center = button.center
-        surface.blit(button_text, button_rect)
-        return button
     
     # a method to find the relative mouse position for several pygame surfaces
     @staticmethod
