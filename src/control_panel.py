@@ -19,8 +19,6 @@ import gui_elements
 
 @staticmethod
 def create_buttons(control_surface, font):
-    buttons = []
-
     control_rect = control_surface.get_rect()
     button_width, button_height = 100, 50
     padding = 5

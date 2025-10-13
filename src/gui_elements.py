@@ -1,14 +1,16 @@
 """
-Class: {file_name}
+Class: gui_elements.py
 Author: MORS
-Date: {date}
+Date: 12 Oct 25
 
 Description:
-{brief_description_of_the_file}
+This is a reusable GUI Class that will hold buttons and other elements for lightweight and simple
+GUI creation
 
 Usage:
-{brief_usage_instructions}
-
+GUIElements - base class for creating GUI objects
+Button - class for creating button objects 
+    -- I need to refactor this to a BaseButton Class that will enable different types of button children classes
 """
 
 import pygame
