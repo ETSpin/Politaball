@@ -16,6 +16,8 @@ import random  # noqa: F401
 import pygame
 import pygame.gfxdraw
 
+import config
+
 
 class Ball:
 
@@ -29,6 +31,7 @@ class Ball:
         self.radius = radius
         self.social = social          # social score
         self.ideology_color(canvas_width)
+        self.position_snapshot = self.position.copy()
         Ball.ballcount += 1
 
     def update(self, screen_width, screen_height):
@@ -74,6 +77,18 @@ class Ball:
         b = int(255 * (1 - ratio))
         self.color =  (r, 0, b)
     
+    @staticmethod
+    def neighbor_check(current_ball, balls):
+        neighbors = []
+        for ball in balls:
+            if ball is not current_ball:
+                dx = ball.position[0] - current_ball.position[0]
+                dy = ball.position[1] - current_ball.position[1]
+                distance = math.sqrt(dx**2 + dy**2)
+                if distance <= config.NEIGHBOR_RADIUS:
+                    neighbors.append(ball)
+        return(neighbors)
+
     @classmethod
     def get_ball_count(cls):
         return f"Total # of balls: {cls.ballcount}"

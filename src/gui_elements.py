@@ -19,20 +19,23 @@ import pygame
 class GUIElements:
     gui_item_count = 0
 
-    def __init__(self, visible = False, gui_item_type = "GUI_Item", name = "Unnamed_GUI_Item"):
-        
+    def __init__(self, visible = False, gui_item_type = "GUI_Item", name = "Unnamed_GUI_Item"):  
         self.visible = visible
         self.gui_item_type = gui_item_type
         self.name = name
         self.gui_item_number = GUIElements.gui_item_count
 
         GUIElements.gui_item_count +=1
+    
+    def __del__(self):
+        GUIElements.gui_item_count -= 1
+        print(f"GUI item {self.name} destroyed")
 
 class Button(GUIElements):
     buttoncount = 0
 
-    def __init__(self, text, x, y, width, height, font, buttonname = None, visible=True, textcolor=(255,255,255), buttoncolor=(211,211,211)):
-        super().__init__(visible, "Button_Item", f"button{Button.buttoncount}")
+    def __init__(self, text, x, y, width, height, font, buttonname = None, visible=True, textcolor=(0,0,0), buttoncolor=(211,211,211)):
+        super().__init__(visible, "Button_Item", f"button_{Button.buttoncount}")
         self.x = x
         self.y = y
         self.width = width
