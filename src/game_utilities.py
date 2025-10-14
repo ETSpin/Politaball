@@ -53,10 +53,20 @@ class GameUtilities:
     def spawn_balls():
     #Create a list of Balls --
         balls = []
+
+        #generate a randomized list of weights for the social score
+        #needs to be moved to another location later
+        total = config.BALL_COUNT
+        heavy_count = int(total * 0.05)
+        medium_count = int(total * 0.10)
+        plain_count = total - heavy_count - medium_count
+
+        weights = [3] * heavy_count + [2] * medium_count + [1] * plain_count
+        random.shuffle(weights)
+
                 
         for values in range(config.BALL_COUNT):
-            position = (random.gauss(config.CANVAS_WIDTH/2, 100), random.gauss(config.CANVAS_HEIGHT/2, 100))
-            
+            position = (random.gauss(config.CANVAS_WIDTH/2, 100), random.gauss(config.CANVAS_HEIGHT/2, 100))  
             if position[0] < config.CANVAS_WIDTH // 2:
                 velocity = (-1,0)
             elif position[0] > config.CANVAS_WIDTH // 2:
@@ -64,10 +74,8 @@ class GameUtilities:
             else:
                 velocity = (0,0)
 
-            balls.append(ball.Ball(position,velocity,config.RADIUS,position[0],config.CANVAS_WIDTH))
+            balls.append(ball.Ball(position,velocity,config.RADIUS,weights[values],config.CANVAS_WIDTH))
         
-        #starting_balls = []
-        #starting_balls = copy.deepcopy(balls) #captures the starting state of the balls
         return(balls)
 
     @staticmethod
@@ -84,6 +92,9 @@ class GameUtilities:
         game_surface.fill((255, 255, 255))
         pygame.draw.line(game_surface, (0, 0, 0), (config.CANVAS_WIDTH // 2, 0), (config.CANVAS_WIDTH // 2, config.CANVAS_HEIGHT), 1)  # noqa: E501
 
+        for b in balls:
+            b.neighbor_check(b, balls)
+        
         for b in balls:
             b.update(config.CANVAS_WIDTH,config.CANVAS_HEIGHT)
             b.ideology_color(config.CANVAS_WIDTH)

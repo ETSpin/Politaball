@@ -25,9 +25,9 @@ class Ball:
     red_avg = 0
     blue_avg = 0
 
-    def __init__(self, position, velocity, radius, social,canvas_width):
+    def __init__(self, position, velocity, radius, social, canvas_width):
         self.position = pygame.math.Vector2(position)      # PyGame Vector2 object
-        self.velocity = pygame.math.Vector2(velocity)      # PyGame Vector2 object
+        self.velocity = pygame.math.Vector2((1,0))      # PyGame Vector2 object
         self.radius = radius
         self.social = social          # social score
         self.ideology_color(canvas_width)
@@ -55,9 +55,7 @@ class Ball:
                 self.velocity[1] = 0
 
     def draw(self, surface):
-        # Draw the ball on the specified surface
-        #pygame.draw.circle(surface, self.color,  self.position, self.radius) #basic circle # noqa: E501
-        #pygame.draw.circle(surface, (0,0,0),  self.position, self.radius, 1) #basic circle outline # noqa: E501
+        #draw a ball
         pygame.gfxdraw.filled_circle(surface, int(self.position.x), int(self.position.y), self.radius, self.color)  # noqa: E501
         pygame.gfxdraw.aacircle(surface, int(self.position.x), int(self.position.y), self.radius, (0,0,0))  # noqa: E501
 
@@ -80,13 +78,29 @@ class Ball:
     @staticmethod
     def neighbor_check(current_ball, balls):
         neighbors = []
+        totalweight = current_ball.social
+        avgx, avgy = (current_ball.position[0] * current_ball.social), (current_ball.position[1] * current_ball.social)
+
         for ball in balls:
             if ball is not current_ball:
                 dx = ball.position[0] - current_ball.position[0]
                 dy = ball.position[1] - current_ball.position[1]
                 distance = math.sqrt(dx**2 + dy**2)
                 if distance <= config.NEIGHBOR_RADIUS:
-                    neighbors.append(ball)
+                    #neighbors.append(ball)
+                    avgx += (ball.position[0] * ball.social)
+                    avgy += (ball.position[1] * ball.social)
+                    totalweight += ball.social
+
+        if totalweight == 0:
+            current_ball.velocity = pygame.math.Vector2((0,0))
+        elif totalweight > 0:
+            avgx /= totalweight
+            avgy /= totalweight
+            dx = avgx - current_ball.position[0]
+            dy = avgy - current_ball.position[1]
+            current_ball.velocity = pygame.math.Vector2((dx, dy))
+
         return(neighbors)
 
     @classmethod
